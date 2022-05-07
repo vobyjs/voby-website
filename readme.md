@@ -1,6 +1,6 @@
 # Voby Website
 
-The website served at [`voby.dev`](https://voby.dev)
+The website served at [`voby.dev`](https://voby.dev).
 
 ---
 
