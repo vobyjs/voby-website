@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "voby-website",
+  "version": "0.0.0",
+  "scripts": {
+    "deploy": "git-directory-deploy --directory dist"
+  },
+  "devDependencies": {
+    "git-directory-deploy": "^1.5.1"
+  }
+}
