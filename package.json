@@ -1,11 +1,25 @@
 {
-  "private": true,
-  "name": "voby-website",
-  "version": "0.0.0",
+  "name": "voby-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "deploy": "git-directory-deploy --directory dist"
+    "start": "vite",
+    "build": "vite build"
   },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "git-directory-deploy": "^1.5.1"
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "autoprefixer": "^10.4.11",
+    "sass": "^1.54.9",
+    "vite": "^3.1.2"
+  },
+  "dependencies": {
+    "@amoutonbrady/lz-string": "^0.0.1",
+    "esbuild-wasm": "^0.15.7",
+    "monaco-editor": "^0.34.0",
+    "prettier": "^2.7.1",
+    "voby": "^0.42.2"
   }
 }

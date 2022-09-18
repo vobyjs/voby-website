@@ -2,6 +2,20 @@
 
 The website served at [`voby.dev`](https://voby.dev).
 
----
+## Setup
 
-//TODO
+```
+npm i
+```
+
+## Development
+
+```
+npm start
+```
+
+## Build
+
+```
+npm run build
+```

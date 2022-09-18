@@ -1,0 +1,11 @@
+.preview {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+
+  &__iframe {
+    flex: 1;
+    border: 0;
+  }
+}
