@@ -1,8 +1,0 @@
-{
-  "printWidth": 100,
-  "trailingComma": "all",
-  "singleQuote": true,
-  "jsxSingleQuote": true,
-  "importOrder": ["\\.(css|scss)$", "<THIRD_PARTY_MODULES>", "^[./]"],
-  "importOrderSeparation": true
-}
