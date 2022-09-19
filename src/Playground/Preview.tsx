@@ -1,9 +1,7 @@
 import './preview.scss';
 
-import { compressToURL } from '@amoutonbrady/lz-string';
-import { $, If, untrack } from 'voby';
+import { $, Ternary, untrack } from 'voby';
 
-import { editorDataAsJson } from './parsers';
 import { compiler, resizing } from './shared';
 
 const getHtml = (js: string, css?: string) => {
@@ -34,40 +32,32 @@ const getHtml = (js: string, css?: string) => {
     </html>`;
 };
 
+const doc$ = $('');
+const iframeEl$ = $<HTMLIFrameElement>();
+
+export const reload = () => {
+  const iframeEl = untrack(iframeEl$);
+  if (iframeEl?.srcdoc) iframeEl.srcdoc = doc$();
+};
+
 export const Preview = () => {
-  const doc = $('');
-  const iframeEl = $<HTMLIFrameElement>();
-
   compiler.onmessage = ({ data }: { data: { js: string; css?: string } }) => {
-    doc(getHtml(data.js, data.css));
-  };
-
-  const share = () => {
-    location.hash = compressToURL(JSON.stringify(editorDataAsJson()));
-    navigator.clipboard.writeText(location.href);
+    doc$(getHtml(data.js, data.css));
   };
 
   return (
-    <div class='preview'>
-      <div class='playground-header playground-header--preview'>
-        <button class='icon--reload' onClick={() => (untrack(iframeEl)!.srcdoc = untrack(doc))} />
-        <button class='icon--share' onClick={share} />
+    <Ternary when={doc$}>
+      <iframe
+        class='preview'
+        style={() => `pointer-events:${resizing() ? 'none' : 'all'}`}
+        ref={iframeEl$}
+        title='Voby REPL'
+        srcDoc={doc$}
+        sandbox='allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin'
+      />
+      <div class='preview'>
+        <h1>Loading Playground...</h1>
       </div>
-      <If
-        when={doc}
-        fallback={
-          <h1 class='flex-center font-normal text-xl mt-30% md:mt-50%'>Loading Playground...</h1>
-        }
-      >
-        <iframe
-          style={() => `pointer-events:${resizing() ? 'none' : 'all'}`}
-          class='preview__iframe'
-          ref={iframeEl}
-          title='Voby REPL'
-          srcDoc={doc}
-          sandbox='allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin'
-        />
-      </If>
-    </div>
+    </Ternary>
   );
 };

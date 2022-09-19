@@ -32,27 +32,23 @@ export const EditorTabs = () => {
     activeTab(newActiveId!);
   };
 
-  return (
-    <>
-      <For values={editorData}>
-        {(data) => (
-          <div
-            class={['tab', { 'tab--active': () => activeTab() === data.id }]}
-            onClick={() => activeTab(data.id)}
-          >
-            {data.name}.{data.fileType}
-            <If when={data.id !== 0}>
-              <button
-                class='icon--close'
-                onClick={(e) => (e.stopImmediatePropagation(), deleteTab(data.id))}
-              />
-            </If>
-          </div>
-        )}
-      </For>
-      <button class='playground-newtab' onClick={createNewTab}>
-        <div class='icon--plus' />
-      </button>
-    </>
-  );
+  return [
+    <For values={editorData}>
+      {(data) => (
+        <div
+          class={['tab', { 'tab--active': () => activeTab() === data.id }]}
+          onClick={() => activeTab(data.id)}
+        >
+          {data.name}.{data.fileType}
+          <If when={data.id !== 0}>
+            <button
+              class='icon--close'
+              onClick={(e) => (e.stopImmediatePropagation(), deleteTab(data.id))}
+            />
+          </If>
+        </div>
+      )}
+    </For>,
+    <button class='icon--plus' onClick={createNewTab} />,
+  ];
 };

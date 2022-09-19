@@ -1,33 +1,12 @@
 import './editor.scss';
 
-import { $, untrack } from 'voby';
+import { $, Observable } from 'voby';
 
-import { EditorTabs } from './EditorTabs';
 import { MonacoEditor } from './MonacoEditor';
-import { activeData, formatter, resizing } from './shared';
+import { resizing } from './shared';
 
-export const Editor = () => {
+export const Editor = ({ cursorPosition }: { cursorPosition: Observable<number> }) => {
   const editorSize = $(50);
-  const cursorPosition = $(0);
-
-  const format = () => {
-    const data = untrack(activeData);
-    if (!data) return;
-    const { model, fileType } = data;
-    formatter.addEventListener(
-      'message',
-      ({ data }: { data: { code: string; cursorOffset: number } }) => {
-        model.setValue(data.code);
-        cursorPosition(data.cursorOffset);
-      },
-      { once: true },
-    );
-    formatter.postMessage({
-      code: model.getValue(),
-      cursorOffset: untrack(cursorPosition),
-      isCss: fileType === 'css',
-    });
-  };
 
   const startResizing = () => {
     resizing(true);
@@ -54,18 +33,10 @@ export const Editor = () => {
     window.addEventListener('touchend', end);
   };
 
-  return (
-    <>
-      <div class='editor' style={{ width: () => `${editorSize()}%` }}>
-        <div class='playground-header'>
-          <EditorTabs />
-          <button class='playground-format' onClick={format}>
-            <div class='icon--prettier' />
-          </button>
-        </div>
-        <MonacoEditor position$={cursorPosition} />
-      </div>
-      <div class='editor-resizer' onMouseDown={startResizing} onTouchStart={startResizing} />
-    </>
-  );
+  return [
+    <div class='editor' style={{ '--desktop-width': () => `${editorSize()}%` }}>
+      <MonacoEditor position$={cursorPosition} />
+    </div>,
+    <div class='editor-resizer' onMouseDown={startResizing} onTouchStart={startResizing} />,
+  ];
 };
