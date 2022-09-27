@@ -50,6 +50,6 @@ self.addEventListener('message', async ({ data }: { data: { file: string; value:
     const css = res.outputFiles.find((file) => file.path === '/index.css')?.text;
     if (js) self.postMessage({ js, css });
   } catch (error) {
-    console.log(error);
+    self.postMessage({ error: error?.toString() });
   }
 });

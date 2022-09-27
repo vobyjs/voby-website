@@ -41,23 +41,35 @@ export const reload = () => {
 };
 
 export const Preview = () => {
-  compiler.onmessage = ({ data }: { data: { js: string; css?: string } }) => {
-    doc$(getHtml(data.js, data.css));
+  const showError$ = $(false);
+  const errorMessage$ = $('');
+
+  compiler.onmessage = ({ data }: { data: { js: string; css?: string; error?: string } }) => {
+    if (data.error) {
+      showError$(true);
+      errorMessage$(data.error);
+    } else {
+      showError$(false);
+      doc$(getHtml(data.js, data.css));
+    }
   };
 
   return (
-    <Ternary when={doc$}>
-      <iframe
-        class='preview'
-        style={() => `pointer-events:${resizing() ? 'none' : 'all'}`}
-        ref={iframeEl$}
-        title='Voby REPL'
-        srcDoc={doc$}
-        sandbox='allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin'
-      />
-      <div class='preview'>
+    <div class='preview'>
+      <Ternary when={doc$}>
+        <iframe
+          class='preview__iframe'
+          style={() => `pointer-events:${resizing() ? 'none' : 'all'}`}
+          ref={iframeEl$}
+          title='Voby REPL'
+          srcDoc={doc$}
+          sandbox='allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals allow-same-origin'
+        />
         <h1>Loading Playground...</h1>
-      </div>
-    </Ternary>
+      </Ternary>
+      <code class={['preview__error', { 'preview__error--visible': showError$ }]}>
+        {errorMessage$}
+      </code>
+    </div>
   );
 };
